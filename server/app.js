@@ -51,11 +51,11 @@ app.use(
 const mock = require('./routes/mock');
 const devService = require('./routes/devService');
 const fileService = require('./routes/fileService');
-const WXService = require('./routes/WXService');
+// const WXService = require('./routes/WXService');
 app.use(mock.routes());
 app.use(devService.routes());
 app.use(fileService.routes());
-app.use(WXService.routes());
+// app.use(WXService.routes());
 
 // 页面路由 静态资源方式 直接访问(这里开放html访问)
 app.use(staticServer(path.join(__dirname, './views'), { extensions: ['html'] }));
