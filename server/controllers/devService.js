@@ -14,12 +14,12 @@ exports.add = async (ctx, next) => {
     ctx.response.body = {
       status: 1,
       code: result.error.errno,
-      msg: result.error.sqlMessage
+      message: result.error.sqlMessage
     };
   } else {
     ctx.response.body = {
       status: 0,
-      msg: '注册成功'
+      message: '注册成功'
     };
   }
 };
@@ -30,12 +30,12 @@ exports.query = async (ctx, next) => {
     ctx.response.body = {
       status: 1,
       code: result.error.errno,
-      msg: result.error.sqlMessage
+      message: result.error.sqlMessage
     };
   } else {
     ctx.response.body = {
       status: 0,
-      msg: 'success',
+      message: 'success',
       data: result
     };
   }
