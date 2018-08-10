@@ -1,0 +1,6 @@
+node_modules/
+logs/
+server/node_modules/
+server/logs/
+clint/node_modules/
+clint/logs/

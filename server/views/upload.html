@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="shortcut icon" href="./static/img/vue-logo.png">
+  <link rel='stylesheet' href='./static/css/style.css' />
+  <title>Document</title>
+</head>
+
+<body>
+  <input type="file" name="file" id="file">
+  <input type="button" value="提交" onclick="upload();" />
+  <script>
+    function upload() {
+      var form = document.getElementById('file');
+      var XHR = new XMLHttpRequest();
+      var formData = new FormData();
+
+      /* 把文件添加到表单里 */
+      formData.append("upfile", document.getElementById("file").files[0]);
+      XHR.onreadystatechange = function () {
+        if (XHR.readyState == 4) {
+          if (XHR.status == 200) {
+            console.log(XHR.responseText);
+            alert(JSON.parse(XHR.responseText).msg);
+          } else {
+            alert("上传失败");
+          }
+        }
+      }
+      XHR.open("post", "./qiaodev/upload");
+      XHR.send(formData);
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>qiaodev</title>
+  <link rel="shortcut icon" href="./static/img/vue-logo.png">
+  <link rel='stylesheet' href='./static/css/style.css' />
+</head>
+
+<body>
+
+  <h1>Welcome to qiaodev</h1>
+  <p>A Web Server for koa2</p>
+
+  <label for="name">用户名</label>
+  <input type="text" name="name" value="" id="uname" placeholder="请输入用户名">
+  <label for="sex">性别</label>
+  <input type="text" name="sex" value="" id="sex" placeholder="请输入性别">
+
+  <input type="button" name="submit" value="注册" id="submit">
+  <input type="button" name="query" value="查询" id="query">
+  <input type="button" name="mock" value="MOCK查询" id="mock">
+  <p id="tip"></p>
+</body>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+<script type="text/javascript">
+  $(document).ready(function () {
+    $("#submit").on("click", function () {
+      if ($("#uname").val() == "" || $("#sex").val() == "") {
+        alert("用户名和性别必填");
+        return;
+      }
+      var data = {};
+      data.name = $("#uname").val();
+      data.sex = $("#sex").val();
+      $.post("./qiaodev/dev/add", data,
+        function (result, textStatus, jqXHR) {
+          if (result) {
+            if (result.status == 0) {
+              alert("注册成功");
+            } else {
+              alert("注册失败：" + result.msg);
+            }
+          }
+        },
+        "json"
+      );
+    })
+
+    $("#query").on("click", function () {
+      $.get("./qiaodev/dev/query?type=1",
+        function (result, textStatus, jqXHR) {
+          if (result) {
+            $("#tip").html(JSON.stringify(result));
+          }
+        },
+        "json"
+      );
+    })
+
+    $("#mock").on("click", function () {
+      $.get("./qiaodev/mock/getlist?id=123",
+        function (result, textStatus, jqXHR) {
+          if (result) {
+            console.log(result.data.list[0].idx);
+            $("#tip").html(JSON.stringify(result));
+          }
+        },
+        "json"
+      );
+    })
+
+  });
+
+</script>
+
+</html>
