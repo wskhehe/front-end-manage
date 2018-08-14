@@ -5,7 +5,8 @@
   "author": "qiaozhu <378937873@qq.com>",
   "private": true,
   "scripts": {
-    "start": "node app.js"
+    "start": "node app.js",
+    "apidoc": "apidoc -i controllers/ -o public/apidoc/"
   },
   "dependencies": {
     "axios": "^0.18.0",

@@ -7,16 +7,16 @@ exports.hello = async (ctx, next) => {
 };
 exports.indexs = async (ctx, next) => {
   ctx.response.type = 'html';
-  const html = path.join(__dirname, '../views/index.html');
+  const html = path.join(__dirname, '../public/index.html');
   ctx.response.body = await fs.readFileSync(html, 'utf8');
 };
 exports.about = async (ctx, next) => {
   ctx.response.type = 'html';
-  const html = path.join(__dirname, '../views/about.html');
+  const html = path.join(__dirname, '../public/about.html');
   ctx.response.body = await fs.readFileSync(html, 'utf8');
 };
 exports.upload = async (ctx, next) => {
   ctx.response.type = 'html';
-  const html = path.join(__dirname, '../views/upload.html');
+  const html = path.join(__dirname, '../public/upload.html');
   ctx.response.body = await fs.readFileSync(html, 'utf8');
 };

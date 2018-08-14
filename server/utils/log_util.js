@@ -7,95 +7,50 @@ log4js.configure(log_config);
 
 var logUtil = {};
 
-var errorLogger = log4js.getLogger('error');
-var infoLogger = log4js.getLogger('info');
+var logger = log4js.getLogger('error');
 
 //封装错误日志
-logUtil.error = (ctx, error, startTime, endTime) => {
-  if (ctx && error) {
-    errorLogger.error(formatError(ctx, error, startTime, endTime));
-  }
-};
-
-//封装普通日志
-logUtil.info = function(ctx, startTime, endTime) {
+logUtil.error = (ctx, startTime, endTime, error = {}) => {
   if (ctx) {
-    infoLogger.info(formatInfo(ctx, startTime, endTime));
+    logger.error(formatError(ctx, startTime, endTime, error));
   }
-};
-//格式化普通日志
-var formatInfo = function(ctx, startTime, endTime) {
-  var logText = new String();
-
-  //日志信息开始
-  logText += '\n' + '*************** response log start ***************' + '\n';
-
-  //添加请求头信息
-  logText += formatResponse(ctx.request, startTime, endTime);
-
-  //响应状态码
-  logText += 'response status: ' + ctx.status + '\n';
-
-  //响应内容
-  logText += 'response body: ' + '\n' + JSON.stringify(ctx.body) + '\n';
-
-  //响应日志结束
-  logText += '*************** response log end ***************' + '\n';
-
-  return logText;
 };
 
 //格式化错误日志
-var formatError = function(ctx, err, startTime, endTime) {
+var formatError = function(ctx, startTime, endTime, error) {
   var logText = new String();
-
-  //错误信息开始
-  logText += '\n' + '*************** error log start ***************' + '\n';
-
-  //添加请求头信息
-  logText += formatResponse(ctx.request, startTime, endTime);
-
-  //错误名称
-  logText += 'err name: ' + err.name + '\n';
-  //错误信息
-  logText += 'err message: ' + err.message + '\n';
-  //错误详情
-  logText += 'err stack: ' + err.stack + '\n';
-
-  //错误信息结束
-  logText += '*************** error log end ***************' + '\n';
-
-  return logText;
-};
-
-//格式化客户端请求头信息
-var formatResponse = function(req, startTime, endTime) {
-  var logText = new String();
-
-  var method = req.method;
-  //错误ID
-  logText += 'request id: ' + startTime + '\n';
-
+  var method = ctx.request.method;
+  //编号
+  logText += 'request id: ' + (ctx.request.header.requestid || null) + '\n';
   //访问方法
-  logText += 'request method: ' + method + '\n';
-
+  logText += 'request method: ' + ctx.request.method + '\n';
   //请求原始地址
-  logText += 'request originalUrl:  ' + req.originalUrl + '\n';
-
+  logText += 'request originalUrl:  ' + ctx.request.originalUrl + '\n';
   //客户端ip
-  logText += 'request client ip:  ' + req.ip + '\n';
-
+  logText += 'request client ip:  ' + ctx.request.ip + '\n';
   //请求时间
   logText += 'request startTime:  ' + startTime + '\n';
-
   //请求参数
   if (method === 'GET') {
-    logText += 'request query:  ' + JSON.stringify(req.query) + '\n';
+    logText += 'request query:  ' + JSON.stringify(ctx.request.query) + '\n';
   } else {
-    logText += 'request body: ' + '\n' + JSON.stringify(req.body) + '\n';
+    logText += 'request body: ' + '\n' + JSON.stringify(ctx.request.body) + '\n';
   }
-  //服务器响应时间
-  logText += 'response time: ' + (endTime - startTime) + '\n';
+  //响应状态码
+  logText += 'response status: ' + ctx.response.status + '\n';
+  //响应时间
+  logText += 'response timeDiff: ' + (endTime - startTime) + '\n';
+  //响应内容
+  logText += 'response body: ' + '\n' + JSON.stringify(ctx.response.body) + '\n\n';
+
+  if (error.message) {
+    //错误名称
+    logText += 'error name: ' + error.name + '\n';
+    //错误信息
+    logText += 'error message: ' + error.message + '\n';
+    //错误详情
+    logText += 'error stack: ' + error.stack + '\n';
+  }
 
   return logText;
 };

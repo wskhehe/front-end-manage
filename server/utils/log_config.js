@@ -32,7 +32,7 @@ module.exports = {
     // 没有找到对应loger时会使用default
     // appenders使用上面哪几种输入模式
     default: { appenders: ['console', 'error'], level: 'debug' },
-    error: { appenders: ['console', 'error'], level: 'error' },
+    error: { appenders: ['error'], level: 'error' },
     info: { appenders: ['info'], level: 'info' },
     console: { appenders: ['console'], level: 'info' }
   }

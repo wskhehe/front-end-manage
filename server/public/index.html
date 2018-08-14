@@ -59,15 +59,16 @@
     })
 
     $("#mock").on("click", function () {
-      $.get("./qiaodev/mock/getlist?id=123",
-        function (result, textStatus, jqXHR) {
-          if (result) {
-            console.log(result.data.list[0].idx);
-            $("#tip").html(JSON.stringify(result));
-          }
+      $.ajax({
+        type: "get",
+        url: "./qiaodev/mock/getlist?id=123",
+        headers: {
+          requestid: Date.now()
         },
-        "json"
-      );
+        success: function (response) {
+          $("#tip").html(JSON.stringify(response));
+        }
+      });
     })
 
   });

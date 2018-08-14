@@ -6,6 +6,7 @@ const logs = require('./utils/log_util');
 // const https = require('https');
 const path = require('path');
 const fs = require('fs');
+const config = require('./config/config');
 
 const app = new Koa();
 
@@ -18,10 +19,24 @@ const errorHandler = async (ctx, next) => {
   try {
     await next();
     const endTime = new Date().getTime(); // 请求响应结束时间
-    // logs.info(ctx, startTime, endTime); // 记录所有请求
+
+    // 记录接口请求错误日志  资源请求不记录
+    const originalUrl = ctx.request.originalUrl;
+    if (originalUrl.indexOf(config.serverBaseurl) == 0) {
+      if (ctx.response.body) {
+        if (ctx.response.body.status != 0) {
+          logs.error(ctx, startTime, endTime);
+        }
+      } else {
+        ctx.response.body = {
+          status: 1,
+          message: '服务端未响应数据'
+        };
+        logs.error(ctx, startTime, endTime);
+      }
+    }
   } catch (err) {
     // 捕捉到异常 也要完成响应
-    ctx.response.type = 'json';
     ctx.response.body = {
       status: 1,
       message: err.message
@@ -57,12 +72,12 @@ app.use(devService.routes());
 app.use(fileService.routes());
 // app.use(WXService.routes());
 
-// 页面路由 静态资源方式 直接访问(这里开放html访问)
-app.use(staticServer(path.join(__dirname, './views'), { extensions: ['html'] }));
+// 页面路由 静态资源方式 直接访问
+app.use(staticServer(path.join(__dirname, './public')));
 
 // 输出错误信息
 app.on('error', (err, ctx, startTime, endTime) => {
-  logs.error(ctx, err, startTime, endTime);
+  logs.error(ctx, startTime, endTime, err);
 });
 
 const port = process.env.PORT || '3100';
