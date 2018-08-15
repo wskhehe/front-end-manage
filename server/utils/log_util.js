@@ -21,7 +21,7 @@ var formatError = function(ctx, startTime, endTime, error) {
   var logText = new String();
   var method = ctx.request.method;
   //编号
-  logText += 'request id: ' + (ctx.request.header.requestid || null) + '\n';
+  logText += '\n' + 'request id: ' + (ctx.request.header.requestid || '') + '\n';
   //访问方法
   logText += 'request method: ' + ctx.request.method + '\n';
   //请求原始地址

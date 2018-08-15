@@ -20,6 +20,7 @@
   <input type="button" name="submit" value="注册" id="submit">
   <input type="button" name="query" value="查询" id="query">
   <input type="button" name="mock" value="MOCK查询" id="mock">
+  <input type="button" name="validator" value="validator" id="validator">
   <p id="tip"></p>
 </body>
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
@@ -62,6 +63,31 @@
       $.ajax({
         type: "get",
         url: "./qiaodev/mock/getlist?id=123",
+        headers: {
+          requestid: Date.now()
+        },
+        success: function (response) {
+          $("#tip").html(JSON.stringify(response));
+        }
+      });
+    })
+    $("#validator").on("click", function () {
+      var _d = {
+        id: "12311",
+        name: 123,
+        age: 12,
+        dcount: 10.00,
+        phone: '18671451730',
+        iadmin: true,
+        desc: 2131,
+        enum: 'admin'
+      }
+      $.ajax({
+        type: "post",
+        url: "./qiaodev/setting/validator",
+        data: JSON.stringify(_d),
+        dataType: 'json',
+        contentType: 'application/json;charset=utf-8',
         headers: {
           requestid: Date.now()
         },

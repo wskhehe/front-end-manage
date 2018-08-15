@@ -19,18 +19,19 @@ const errorHandler = async (ctx, next) => {
   try {
     await next();
     const endTime = new Date().getTime(); // 请求响应结束时间
-
     // 记录接口请求错误日志  资源请求不记录
     const originalUrl = ctx.request.originalUrl;
     if (originalUrl.indexOf(config.serverBaseurl) == 0) {
       if (ctx.response.body) {
         if (ctx.response.body.status != 0) {
+          // status == 1 此类错误可以不记录日志 所有信息已response到前台
           logs.error(ctx, startTime, endTime);
         }
       } else {
         ctx.response.body = {
           status: 1,
-          message: '服务端未响应数据'
+          message: '服务器异常',
+          data: '服务端未响应数据,请联系管理员'
         };
         logs.error(ctx, startTime, endTime);
       }
@@ -39,7 +40,8 @@ const errorHandler = async (ctx, next) => {
     // 捕捉到异常 也要完成响应
     ctx.response.body = {
       status: 1,
-      message: err.message
+      message: '服务器异常',
+      data: error.message
     };
     const endTime = new Date().getTime(); // 请求响应结束时间
     // 释放异常 才能完成整个请求 下面监听error 记录错误日志
@@ -64,10 +66,12 @@ app.use(
 
 // 以下是服务端路由 每个模块对应一个文件
 const mock = require('./routes/mock');
+const setting = require('./routes/setting');
 const devService = require('./routes/devService');
 const fileService = require('./routes/fileService');
 // const WXService = require('./routes/WXService');
 app.use(mock.routes());
+app.use(setting.routes());
 app.use(devService.routes());
 app.use(fileService.routes());
 // app.use(WXService.routes());

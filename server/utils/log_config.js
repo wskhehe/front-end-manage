@@ -14,12 +14,12 @@ module.exports = {
       type: 'stdout'
     },
     // 普通信息日志 以文件形式输出
-    info: {
-      type: 'dateFile',
-      filename: infoLogPath,
-      pattern: '-yyyy-MM-dd.log',
-      alwaysIncludePattern: true
-    },
+    // info: {
+    //   type: 'dateFile',
+    //   filename: infoLogPath,
+    //   pattern: '-yyyy-MM-dd.log',
+    //   alwaysIncludePattern: true
+    // },
     // 错误信息日志 以文件形式输出
     error: {
       type: 'dateFile',
@@ -33,7 +33,7 @@ module.exports = {
     // appenders使用上面哪几种输入模式
     default: { appenders: ['console', 'error'], level: 'debug' },
     error: { appenders: ['error'], level: 'error' },
-    info: { appenders: ['info'], level: 'info' },
+    // info: { appenders: ['info'], level: 'info' },
     console: { appenders: ['console'], level: 'info' }
   }
 };
