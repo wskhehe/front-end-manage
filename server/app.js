@@ -2,6 +2,8 @@ const Koa = require('koa');
 var cors = require('koa2-cors');
 const koaBody = require('koa-body');
 const staticServer = require('koa-static');
+const compress = require('koa-compress');
+const jwtKoa = require('koa-jwt');
 const logs = require('./utils/log_util');
 // const https = require('https');
 const path = require('path');
@@ -12,6 +14,9 @@ const app = new Koa();
 
 // 开启cors 允许跨域
 app.use(cors());
+
+// 开启GZIP
+app.use(compress({ threshold: 2048 }));
 
 // 处理错误中间件
 const errorHandler = async (ctx, next) => {
@@ -38,11 +43,19 @@ const errorHandler = async (ctx, next) => {
     }
   } catch (err) {
     // 捕捉到异常 也要完成响应
-    ctx.response.body = {
-      status: 1,
-      message: '服务器异常',
-      data: error.message
-    };
+    if (err.statusCode == 401) {
+      ctx.response.body = {
+        status: 401,
+        message: 'token校验失败',
+        data: err.message
+      };
+    } else {
+      ctx.response.body = {
+        status: 1,
+        message: '服务器异常',
+        data: err.message
+      };
+    }
     const endTime = new Date().getTime(); // 请求响应结束时间
     // 释放异常 才能完成整个请求 下面监听error 记录错误日志
     ctx.app.emit('error', err, ctx, startTime, endTime);
@@ -50,12 +63,40 @@ const errorHandler = async (ctx, next) => {
 };
 app.use(errorHandler);
 
-// 使用koaBody中间件 并设置可接受文件 限制大小
+// 页面路由 静态资源方式 直接访问
+app.use(staticServer(path.join(__dirname, '/public')));
+
+// jwt中间件
+app.use(
+  jwtKoa({ secret: config.secret }).unless({
+    useOriginalUrl: false,
+    path: [
+      /^\/passport\/login/,
+      /^\/passport\/register/,
+      /^\/mock/,
+      /^\/public/,
+      /^\/upload/,
+      /^\/apidoc/
+    ] //数组中的路径不需要通过jwt验证
+  })
+);
+
+// 使用koaBody中间件 并设置可接受文件文件上传
 app.use(
   koaBody({
     multipart: true,
+    encoding: 'gzip',
     formidable: {
-      maxFileSize: 200 * 1024 * 1024 // 设置上传文件大小最大限制，默认2M
+      maxFileSize: 10 * 1024 * 1024, // 设置上传文件大小最大限制，默认10M
+      uploadDir: path.join(__dirname, config.uploadtemp), // 文件临时存放目录
+      keepExtensions: true,
+      onFileBegin: (name, file) => {
+        // 检查文件夹是否存在如果不存在则新建文件夹
+        const dir = path.join(__dirname, config.uploadtemp);
+        if (!fs.existsSync(dir)) {
+          fs.mkdirSync(dir);
+        }
+      }
     }
   })
 );
@@ -66,18 +107,15 @@ app.use(
 
 // 以下是服务端路由 每个模块对应一个文件
 const mock = require('./routes/mock');
+const passport = require('./routes/passport');
 const setting = require('./routes/setting');
-const devService = require('./routes/devService');
+const employee = require('./routes/employee');
 const fileService = require('./routes/fileService');
-// const WXService = require('./routes/WXService');
 app.use(mock.routes());
+app.use(passport.routes());
 app.use(setting.routes());
-app.use(devService.routes());
+app.use(employee.routes());
 app.use(fileService.routes());
-// app.use(WXService.routes());
-
-// 页面路由 静态资源方式 直接访问
-app.use(staticServer(path.join(__dirname, './public')));
 
 // 输出错误信息
 app.on('error', (err, ctx, startTime, endTime) => {

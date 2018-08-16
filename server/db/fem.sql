@@ -38,7 +38,7 @@ create table fem_employee
    account              varchar(20) comment '账号',
    password             varchar(32) comment '密码',
    icon                 varchar(255) comment '头像',
-   `group`                varchar(20) comment '小组：字典维护',
+   `group`                varchar(32) comment '小组：字典维护',
    primary key (id)
 );
 

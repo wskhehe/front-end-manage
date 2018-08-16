@@ -4,16 +4,17 @@ const Validator = require('../utils/validator');
 const uuidv1 = require('uuid/v1');
 
 /**
- * @apiDefine group 设置
+ * @apiDefine setting 设置
  */
 
 /**
  *
- * @api {post} /setting/validator 参数校验
+ * @api {post} /setting/validator 参数校验示例
  * @apiName validator
- * @apiGroup group
- * @apiVersion  1.1.1
+ * @apiGroup setting
+ * @apiVersion  1.1.4
  *
+ * @apiHeader {String} Authorization token
  *
  * @apiParam  {String} id 编号 5位字符串
  * @apiParam  {String} name 姓名 3-10位字符串
@@ -127,9 +128,10 @@ exports.validator = async (ctx, next) => {
  *
  * @api {post} /setting/addDict 添加字典
  * @apiName addDict
- * @apiGroup group
+ * @apiGroup setting
  * @apiVersion  1.1.1
  *
+ * @apiHeader {String} Authorization token
  *
  * @apiParam  {String} value 数据值
  * @apiParam  {String} label 标签名
@@ -138,15 +140,12 @@ exports.validator = async (ctx, next) => {
  * @apiParam  {String} parent_id 父级编号(顶级则留空)
  * @apiParam  {String} [remarks] 备注
  *
- * @apiSuccess {Number} status 0
- * @apiSuccess {String} message 添加成功
  *
  * @apiSuccessExample {Object} 成功示例:
  * {
  *     status : 0,
  *     message:'添加成功'
  * }
- *
  *
  */
 exports.addDict = async (ctx, next) => {
@@ -191,7 +190,7 @@ exports.addDict = async (ctx, next) => {
   params.push(10);
   params.push(ctx.request.body.parent_id || '');
   params.push(ctx.request.body.remarks);
-  console.log(params);
+
   let result = await conn.query(Sql.addDict, params);
   if (result.error) {
     ctx.response.body = {
@@ -202,37 +201,61 @@ exports.addDict = async (ctx, next) => {
   } else {
     ctx.response.body = {
       status: 0,
-      message: '注册成功'
+      message: '添加成功'
     };
   }
 };
 /**
  *
- * @api {get} /setting/getDict 查询字典列表
+ * @api {get} /setting/getDict 查询字典
  * @apiName getDict
- * @apiGroup group
- * @apiVersion  1.1.1
+ * @apiGroup setting
+ * @apiVersion  1.1.2
  *
+ * @apiHeader {String} Authorization token
  *
  * @apiParam  {String} parent_id 父级编号 为空表示查询全部
  *
  *
- * @apiSuccessExample {Object} 成功示例:
- * {
- *     status : 0,
- *     message:'添加成功',
- *     data:{
- *       list:[],
- *       count:20
- *     }
- * }
+ * @apiSuccess {Number} status 0
+ * @apiSuccess {Object} data
+ * @apiSuccess {Number} data.count 条数
+ * @apiSuccess {Object} data.list
+ * @apiSuccess {String} data.list.id 编号
+ * @apiSuccess {String} data.list.value 数据值
+ * @apiSuccess {String} data.list.label 标签名
+ * @apiSuccess {String} data.list.type 类型
+ * @apiSuccess {String} data.list.desc 描述
+ * @apiSuccess {Number} data.list.sort 排序
+ * @apiSuccess {String} data.list.parent_id 父级编号
+ * @apiSuccess {String} data.list.remarks 备注
  *
+ *
+ * @apiSuccessExample {Object} 成功示例:
+    {
+        "status": 0,
+        "data": {
+            "count": 1,
+            "list": [
+                {
+                    "id": "3d7076f0a03d11e8ad1fdd6ae3180313",
+                    "value": "task_grade",
+                    "label": "任务级别字典",
+                    "type": "1",
+                    "desc": "任务级别字典",
+                    "sort": 10,
+                    "parent_id": "",
+                    "remarks": "任务级别字典"
+                }
+            ]
+        }
+    }
  *
  */
 exports.getDict = async (ctx, next) => {
   const parent_id = ctx.query.parent_id || '';
   let sql = Sql.getDictAll;
-  if (parent_id) sql = Sql.getDictByKey;
+  if (parent_id) sql = Sql.getDictById;
   let result = await conn.query(sql, [parent_id]);
   if (result.error) {
     ctx.response.body = {
@@ -254,9 +277,10 @@ exports.getDict = async (ctx, next) => {
  *
  * @api {get} /setting/delDict 删除字典
  * @apiName delDict
- * @apiGroup group
+ * @apiGroup setting
  * @apiVersion  1.1.1
  *
+ * @apiHeader {String} Authorization token
  *
  * @apiParam  {String} id 编号
  *

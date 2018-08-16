@@ -25,13 +25,14 @@
         if (XHR.readyState == 4) {
           if (XHR.status == 200) {
             console.log(XHR.responseText);
-            alert(JSON.parse(XHR.responseText).msg);
+            alert(JSON.parse(XHR.responseText).message);
           } else {
             alert("上传失败");
           }
         }
       }
       XHR.open("post", "./qiaodev/upload");
+      XHR.setRequestHeader('Authorization', 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4NjcxNDUxNzMwIiwic2VjcmV0IjoiMTIzNDU2IiwiaWF0IjoxNTM0MzgzNjgzLCJleHAiOjE1MzQ0MTk2ODN9.3WRSpjx-FyIS2EMDuAMk6RMbFX5zwRIXy4eNmAHhaJA');
       XHR.send(formData);
     }
   </script>

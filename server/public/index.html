@@ -64,7 +64,8 @@
         type: "get",
         url: "./qiaodev/mock/getlist?id=123",
         headers: {
-          requestid: Date.now()
+          requestid: Date.now(),
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4NjcxNDUxNzMwIiwic2VjcmV0IjoiMTIzNDU2IiwiaWF0IjoxNTM0MzgzNjgzLCJleHAiOjE1MzQ0MTk2ODN9.3WRSpjx-FyIS2EMDuAMk6RMbFX5zwRIXy4eNmAHhaJA'
         },
         success: function (response) {
           $("#tip").html(JSON.stringify(response));
@@ -83,13 +84,12 @@
         enum: 'admin'
       }
       $.ajax({
-        type: "post",
-        url: "./qiaodev/setting/validator",
-        data: JSON.stringify(_d),
-        dataType: 'json',
-        contentType: 'application/json;charset=utf-8',
+        type: "get",
+        url: "./qiaodev/saveUploadFile",
+
         headers: {
-          requestid: Date.now()
+          requestid: Date.now(),
+          Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4NjcxNDUxNzMwIiwic2VjcmV0IjoiMTIzNDU2IiwiaWF0IjoxNTM0MzgzNjgzLCJleHAiOjE1MzQ0MTk2ODN9.3WRSpjx-FyIS2EMDuAMk6RMbFX5zwRIXy4eNmAHhaJA'
         },
         success: function (response) {
           $("#tip").html(JSON.stringify(response));

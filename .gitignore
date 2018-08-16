@@ -3,5 +3,6 @@ logs/
 server/node_modules/
 server/logs/
 server/public/apidoc/
+server/public/upload/
 clint/node_modules/
 clint/logs/
