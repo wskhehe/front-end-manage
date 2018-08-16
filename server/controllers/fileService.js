@@ -4,11 +4,11 @@ const fs = require('fs');
 
 exports.download = async (ctx, next) => {
   const fileName = ctx.params.filename;
-  const filePath = path.join(__dirname, `/download/${fileName}`);
+  const filePath = path.join(__dirname, `../public/${fileName}`);
   const exists = await fs.existsSync(filePath);
   if (exists) {
     ctx.attachment(fileName);
-    await send(ctx, fileName, { root: __dirname + '/download' });
+    await send(ctx, fileName, { root: __dirname + '../public' });
   } else {
     ctx.throw(404);
   }
