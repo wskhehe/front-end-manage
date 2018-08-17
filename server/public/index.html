@@ -26,6 +26,12 @@
 <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
 <script type="text/javascript">
   $(document).ready(function () {
+    $.ajaxSetup({
+      headers: {
+        requestid: Date.now(),
+        Authorization: localStorage.getItem("mockAuthorization") || ''
+      },
+    })
     $("#submit").on("click", function () {
       if ($("#uname").val() == "" || $("#sex").val() == "") {
         alert("用户名和性别必填");
@@ -63,10 +69,6 @@
       $.ajax({
         type: "get",
         url: "./qiaodev/mock/getlist?id=123",
-        headers: {
-          requestid: Date.now(),
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4NjcxNDUxNzMwIiwic2VjcmV0IjoiMTIzNDU2IiwiaWF0IjoxNTM0MzgzNjgzLCJleHAiOjE1MzQ0MTk2ODN9.3WRSpjx-FyIS2EMDuAMk6RMbFX5zwRIXy4eNmAHhaJA'
-        },
         success: function (response) {
           $("#tip").html(JSON.stringify(response));
         }
@@ -85,12 +87,7 @@
       }
       $.ajax({
         type: "get",
-        url: "./qiaodev/saveUploadFile",
-
-        headers: {
-          requestid: Date.now(),
-          Authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjE4NjcxNDUxNzMwIiwic2VjcmV0IjoiMTIzNDU2IiwiaWF0IjoxNTM0MzgzNjgzLCJleHAiOjE1MzQ0MTk2ODN9.3WRSpjx-FyIS2EMDuAMk6RMbFX5zwRIXy4eNmAHhaJA'
-        },
+        url: "./qiaodev/saveUploadFile?filename=upload_3d8ab9603e4c7f29aca7ecd0784562e6.PNG",
         success: function (response) {
           $("#tip").html(JSON.stringify(response));
         }

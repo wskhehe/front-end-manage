@@ -13,6 +13,10 @@ exports.validator = async (source, rules) => {
     });
   });
 };
+// 是否是时间戳
+exports.isTimestamp = val => {
+  return /^\d+$/.test(val);
+};
 //验证数字和小数
 exports.isNumber = (val, isZero = true, num = 2) => {
   // 0.0  0.00通过 正常数字通过 0不通过

@@ -10,7 +10,7 @@ var logUtil = {};
 var logger = log4js.getLogger('error');
 
 //封装错误日志
-logUtil.error = (ctx, startTime, endTime, error = {}) => {
+logUtil.error = (ctx, startTime, endTime, error) => {
   if (ctx) {
     logger.error(formatError(ctx, startTime, endTime, error));
   }
@@ -43,13 +43,22 @@ var formatError = function(ctx, startTime, endTime, error) {
   //响应内容
   logText += 'response body: ' + '\n' + JSON.stringify(ctx.response.body) + '\n\n';
 
-  if (error.message) {
+  if (error) {
     //错误名称
     logText += 'error name: ' + error.name + '\n';
     //错误信息
     logText += 'error message: ' + error.message + '\n';
-    //错误详情
+    //错误栈
     logText += 'error stack: ' + error.stack + '\n';
+    //如果是sql错误 记录相关信息
+    if (error.sql) {
+      logText += 'error code:: ' + error.code + '\n';
+      logText += 'error errno: ' + error.errno + '\n';
+      logText += 'error sqlMessage: ' + error.sqlMessage + '\n';
+      logText += 'error sqlState: ' + error.sqlState + '\n';
+      logText += 'error index: ' + error.index + '\n';
+      logText += 'error sql: ' + error.sql + '\n';
+    }
   }
 
   return logText;

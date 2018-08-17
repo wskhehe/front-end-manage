@@ -30,7 +30,17 @@ const errorHandler = async (ctx, next) => {
       if (ctx.response.body) {
         if (ctx.response.body.status != 0) {
           // status == 1 此类错误可以不记录日志 所有信息已response到前台
-          logs.error(ctx, startTime, endTime);
+
+          let sqlError = null;
+          if (ctx.response.body.sqlError) {
+            // sql错误服务器记录日志 但不要抛出详细信息到前台
+            sqlError = ctx.response.body.sqlError;
+          }
+          ctx.response.body = {
+            status: 1,
+            message: ctx.response.body.message
+          };
+          logs.error(ctx, startTime, endTime, sqlError);
         }
       } else {
         ctx.response.body = {
@@ -38,7 +48,7 @@ const errorHandler = async (ctx, next) => {
           message: '服务器异常',
           data: '服务端未响应数据,请联系管理员'
         };
-        logs.error(ctx, startTime, endTime);
+        logs.error(ctx, startTime, endTime, null);
       }
     }
   } catch (err) {
@@ -71,12 +81,12 @@ app.use(
   jwtKoa({ secret: config.secret }).unless({
     useOriginalUrl: false,
     path: [
-      /^\/passport\/login/,
-      /^\/passport\/register/,
-      /^\/mock/,
+      /^\/qiaodev\/passport\/login/,
+      /^\/qiaodev\/passport\/register/,
+      /^\/qiaodev\/mock/,
+      /^\/qiaodev\/upload/,
+      /^\/qiaodev\/download/,
       /^\/public/,
-      /^\/upload/,
-      /^\/download/,
       /^\/apidoc/
     ] //数组中的路径不需要通过jwt验证
   })
@@ -86,7 +96,7 @@ app.use(
 app.use(
   koaBody({
     multipart: true,
-    encoding: 'gzip',
+    // encoding: 'gzip',
     formidable: {
       maxFileSize: 10 * 1024 * 1024, // 设置上传文件大小最大限制，默认10M
       uploadDir: path.join(__dirname, config.uploadtemp), // 文件临时存放目录
@@ -111,11 +121,13 @@ const mock = require('./routes/mock');
 const passport = require('./routes/passport');
 const setting = require('./routes/setting');
 const employee = require('./routes/employee');
+const task = require('./routes/task');
 const fileService = require('./routes/fileService');
 app.use(mock.routes());
 app.use(passport.routes());
 app.use(setting.routes());
 app.use(employee.routes());
+app.use(task.routes());
 app.use(fileService.routes());
 
 // 输出错误信息

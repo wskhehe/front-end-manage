@@ -50,8 +50,8 @@ alter table fem_employee comment '人员信息';
 create table fem_task
 (
    id                   varchar(32) not null comment '主键',
-   project              varchar(2) comment '项目',
-   module               varchar(10) comment '模块',
+   project              varchar(32) comment '项目',
+   module               varchar(100) comment '模块',
    developer            varchar(32) comment '开发者',
    level                varchar(1) comment '优先级',
    task_desc            varchar(255) comment '任务描述',

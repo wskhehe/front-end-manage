@@ -2,7 +2,7 @@ const conn = require('../db/DBConfig');
 const Sql = require('../db/employeeSql');
 const Validator = require('../utils/validator');
 const uuidv1 = require('uuid/v1');
-
+const uploader = require('../utils/uploader');
 /**
  * @apiDefine employee 角色
  */
@@ -35,7 +35,24 @@ exports.addEmployee = async (ctx, next) => {
     name: [{ required: true, type: 'string', min: 1, max: 30, message: 'invalid name' }],
     account: [{ required: true, type: 'string', min: 1, max: 20, message: 'invalid account' }],
     password: [{ required: true, type: 'string', min: 1, max: 32, message: 'invalid password' }],
-    icon: [{ required: false, type: 'string', min: 1, max: 255, message: 'invalid icon' }],
+    icon: [
+      { required: true, type: 'string', min: 1, max: 255, message: 'invalid icon' },
+      {
+        type: 'string',
+        validator: (rule, value, callback) => {
+          let ext = value.split('.');
+          ext = ext[ext.length - 1].toLowerCase();
+          console.log(ext);
+          if (ext) {
+            if (ext != 'jpg' && ext != 'jpeg' && ext != 'png') {
+              return callback(new Error(rule.message));
+            }
+          }
+          callback();
+        },
+        message: '头像只能是jpg、jpeg、png格式的图片'
+      }
+    ],
     group: [{ required: true, type: 'string', len: 32, message: 'invalid group' }]
   };
   const valiResult = await Validator.validator(ctx.request.body, rules);
@@ -47,12 +64,21 @@ exports.addEmployee = async (ctx, next) => {
     };
     return;
   }
+  let fileRtn = await uploader.saveUploadFile(ctx.request.body.icon);
+  if (fileRtn.status != 0) {
+    ctx.response.body = {
+      status: 1,
+      message: '保存用户头像失败',
+      data: fileRtn.data
+    };
+    return;
+  }
   let params = [];
   params.push(uuidv1().replace(/-/g, ''));
   params.push(ctx.request.body.name);
   params.push(ctx.request.body.account);
   params.push(ctx.request.body.password);
-  params.push(ctx.request.body.icon);
+  params.push(fileRtn.data);
   params.push(ctx.request.body.group);
 
   let result = await conn.query(Sql.addEmployee, params);
@@ -177,7 +203,7 @@ exports.getEmployee = async (ctx, next) => {
  * @apiParam  {String} id 编号
  * @apiParam  {String} name 姓名
  * @apiParam  {String} account 账号
- * @apiParam  {String} desc 头像
+ * @apiParam  {String} icon 头像
  * @apiParam  {String} group 所属小组
  *
  *
@@ -193,7 +219,24 @@ exports.updateEmployee = async (ctx, next) => {
     id: [{ required: true, type: 'string', len: 32, message: 'invalid id' }],
     name: [{ required: true, type: 'string', min: 1, max: 30, message: 'invalid name' }],
     account: [{ required: true, type: 'string', min: 1, max: 20, message: 'invalid account' }],
-    icon: [{ required: true, type: 'string', min: 1, max: 255, message: 'invalid icon' }],
+    icon: [
+      { required: true, type: 'string', min: 1, max: 255, message: 'invalid icon' },
+      {
+        type: 'string',
+        validator: (rule, value, callback) => {
+          let ext = value.split('.');
+          ext = ext[ext.length - 1].toLowerCase();
+          console.log(ext);
+          if (ext) {
+            if (ext != 'jpg' && ext != 'jpeg' && ext != 'png') {
+              return callback(new Error(rule.message));
+            }
+          }
+          callback();
+        },
+        message: '头像只能是jpg、jpeg、png格式的图片'
+      }
+    ],
     group: [{ required: true, type: 'string', len: 32, message: 'invalid group' }]
   };
   const valiResult = await Validator.validator(ctx.request.body, rules);
@@ -202,6 +245,15 @@ exports.updateEmployee = async (ctx, next) => {
       status: 1,
       message: '参数错误',
       data: valiResult
+    };
+    return;
+  }
+  let fileRtn = await uploader.saveUploadFile(ctx.request.body.icon);
+  if (fileRtn.status != 0) {
+    ctx.response.body = {
+      status: 1,
+      message: '保存用户头像失败',
+      data: fileRtn.data
     };
     return;
   }
@@ -297,7 +349,8 @@ exports.deleteEmployee = async (ctx, next) => {
  * @apiHeader {String} Authorization token
  *
  * @apiParam  {String} id 编号
- * @apiParam  {String} password 密码
+ * @apiParam  {String} password 旧密码
+ * @apiParam  {String} newpassword 新密码
  *
  *
  * @apiSuccessExample {Object} 成功示例:
@@ -310,7 +363,10 @@ exports.deleteEmployee = async (ctx, next) => {
 exports.updateEmployeePassword = async (ctx, next) => {
   let rules = {
     id: [{ required: true, type: 'string', len: 32, message: 'invalid id' }],
-    password: [{ required: true, type: 'string', min: 1, max: 32, message: 'invalid password' }]
+    password: [{ required: true, type: 'string', min: 1, max: 32, message: 'invalid password' }],
+    newpassword: [
+      { required: true, type: 'string', min: 1, max: 32, message: 'invalid newpassword' }
+    ]
   };
   const valiResult = await Validator.validator(ctx.request.body, rules);
   if (valiResult) {
@@ -322,9 +378,10 @@ exports.updateEmployeePassword = async (ctx, next) => {
     return;
   }
   let params = [];
-  params.push(ctx.request.body.password);
+  params.push(ctx.request.body.newpassword);
   params.push(ctx.request.body.id);
-  const result = await conn.query(Sql.delEmployee, params);
+  params.push(ctx.request.body.password);
+  const result = await conn.query(Sql.updateEmployeePassword, params);
   if (result.error) {
     ctx.response.body = {
       status: 1,
