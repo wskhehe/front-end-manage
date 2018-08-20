@@ -38,6 +38,7 @@ exports.login = async (ctx, next) => {
     account: [{ required: true, type: 'string', min: 1, max: 20, message: 'invalid account' }],
     password: [{ required: true, type: 'string', min: 1, max: 32, message: 'invalid password' }]
   };
+  return;
   const valiResult = await Validator.validator(ctx.request.body, rules);
   if (valiResult) {
     ctx.response.body = {

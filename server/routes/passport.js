@@ -1,6 +1,6 @@
-const router = require('koa-router')();
 const passport = require('../controllers/passport');
 
-router.post('/qiaodev/passport/login', passport.login);
-
-module.exports = router;
+module.exports = router => {
+  router.post('/passport/login', passport.login);
+  return router;
+};

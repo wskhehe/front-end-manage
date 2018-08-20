@@ -1,5 +1,6 @@
 const Koa = require('koa');
 var cors = require('koa2-cors');
+const koaRouter = require('koa-router');
 const koaBody = require('koa-body');
 const staticServer = require('koa-static');
 const compress = require('koa-compress');
@@ -11,7 +12,7 @@ const fs = require('fs');
 const config = require('./config/config');
 
 const app = new Koa();
-
+const router = new koaRouter({ prefix: config.serverBaseUrl });
 // 开启cors 允许跨域
 app.use(cors());
 
@@ -26,7 +27,7 @@ const errorHandler = async (ctx, next) => {
     const endTime = new Date().getTime(); // 请求响应结束时间
     // 记录接口请求错误日志  资源请求不记录
     const originalUrl = ctx.request.originalUrl;
-    if (originalUrl.indexOf(config.serverBaseurl) == 0) {
+    if (originalUrl.indexOf(config.serverBaseUrl) == 0) {
       if (ctx.response.body) {
         if (ctx.response.body.status != 0) {
           // status == 1 此类错误可以不记录日志 所有信息已response到前台
@@ -35,19 +36,26 @@ const errorHandler = async (ctx, next) => {
           if (ctx.response.body.sqlError) {
             // sql错误服务器记录日志 但不要抛出详细信息到前台
             sqlError = ctx.response.body.sqlError;
+            ctx.response.body = {
+              status: 1,
+              message: ctx.response.body.message
+            };
           }
-          ctx.response.body = {
-            status: 1,
-            message: ctx.response.body.message
-          };
           logs.error(ctx, startTime, endTime, sqlError);
         }
       } else {
-        ctx.response.body = {
-          status: 1,
-          message: '服务器异常',
-          data: '服务端未响应数据,请联系管理员'
-        };
+        let is404 = true;
+        router.stack.forEach(element => {
+          if (element.path == ctx.request.url) {
+            is404 = false;
+          }
+        });
+        if (!is404 && ctx.status == 404) {
+          ctx.response.body = {
+            status: 1,
+            message: '服务端未响应数据'
+          };
+        }
         logs.error(ctx, startTime, endTime, null);
       }
     }
@@ -76,22 +84,22 @@ app.use(errorHandler);
 // 页面路由 静态资源方式 直接访问
 app.use(staticServer(path.join(__dirname, '/public')));
 
-// jwt中间件
-app.use(
-  jwtKoa({ secret: config.secret }).unless({
-    useOriginalUrl: false,
-    path: [
-      /^\/qiaodev\/passport\/login/,
-      /^\/qiaodev\/passport\/register/,
-      /^\/qiaodev\/mock/,
-      /^\/qiaodev\/upload/,
-      /^\/qiaodev\/download/,
-      /^\/public/,
-      /^\/apidoc/
-    ] //数组中的路径不需要通过jwt验证
-  })
-);
-
+// // jwt中间件
+// app.use(
+//   jwtKoa({ secret: config.secret }).unless({
+//     // useOriginalUrl: false,
+//     path: [
+//       `${config.serverBaseUrl}/passport/login`,
+//       `${config.serverBaseUrl}/passport/register`,
+//       `${config.serverBaseUrl}/upload`,
+//       `${config.serverBaseUrl}/download`,
+//       `${config.serverBaseUrl}/mock`,
+//       /^\/views/,
+//       /^\/public/,
+//       /^\/apidoc/
+//     ] //数组中的路径不需要通过jwt验证
+//   })
+// );
 // 使用koaBody中间件 并设置可接受文件文件上传
 app.use(
   koaBody({
@@ -118,17 +126,18 @@ app.use(
 
 // 以下是服务端路由 每个模块对应一个文件
 const mock = require('./routes/mock');
+const common = require('./routes/common');
 const passport = require('./routes/passport');
 const setting = require('./routes/setting');
 const employee = require('./routes/employee');
 const task = require('./routes/task');
-const fileService = require('./routes/fileService');
-app.use(mock.routes());
-app.use(passport.routes());
-app.use(setting.routes());
-app.use(employee.routes());
-app.use(task.routes());
-app.use(fileService.routes());
+app.use(mock(router).routes());
+app.use(common(router).routes());
+app.use(passport(router).routes());
+app.use(setting(router).routes());
+app.use(employee(router).routes());
+app.use(task(router).routes());
+app.use(router.allowedMethods());
 
 // 输出错误信息
 app.on('error', (err, ctx, startTime, endTime) => {

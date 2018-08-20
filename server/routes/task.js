@@ -1,8 +1,10 @@
-const router = require('koa-router')();
 const task = require('../controllers/task');
 
-router.post('/qiaodev/task/addTask', task.addTask);
-router.get('/qiaodev/task/getDict', task.getDict);
-router.get('/qiaodev/task/delDict', task.delDict);
-
-module.exports = router;
+module.exports = router => {
+  router.post('/task/addTask', task.addTask);
+  router.post('/task/getTaskList', task.getTaskList);
+  router.post('/task/updateTask', task.updateTask);
+  router.post('/task/updateTaskState', task.updateTaskState);
+  router.get('/task/delTask', task.delTask);
+  return router;
+};

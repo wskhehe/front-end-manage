@@ -290,7 +290,7 @@ exports.updateEmployee = async (ctx, next) => {
  * @api {get} /employee/deleteEmployee 删除角色
  * @apiName deleteEmployee
  * @apiGroup employee
- * @apiVersion  1.1.1
+ * @apiVersion  1.0.0
  *
  * @apiHeader {String} Authorization token
  *
