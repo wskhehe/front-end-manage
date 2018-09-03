@@ -1,0 +1,7 @@
+.tasklist-page {
+  .app-title {
+    & .color {
+      color: #ff0000;
+    }
+  }
+}

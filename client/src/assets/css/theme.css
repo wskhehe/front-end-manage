@@ -1,0 +1,81 @@
+/*
+--------------------postcss theme---------------
+
+当前主题色 #1890FF
+为了方便更换主题颜色 页面劲量不要单独配置颜色 全都使用reset文件定制的颜色
+跟随主题的颜色 直接使用font-default bg-default border-default样式规则
+个性化 成功 失败 警告 禁用 等颜色reset文件也有对应样式规则
+*/
+
+/* theme变量 */
+:root {
+  /* 主题色 */
+  --base-color: #ff4444;
+  /* 基础蓝色 */
+  --base-blue-color: #409eff;
+  /* 基础绿色 */
+  --base-green-color: #00b300;
+  /* 基础深灰 */
+  --base-darkgray-color: #606266;
+  /* 基础灰色*/
+  --base-gray-color: #909399;
+  /* 基础红色 */
+  --base-red-color: #ff4949;
+  /* 基础橘色 */
+  --base-orange-color: #ff9900;
+  /* 基础白色 */
+  --base-white-color: #ffffff;
+  /* body字体默认颜色 */
+  --body-font-color: #303133;
+  /* label颜色 */
+  --base-label-color: #606266;
+  /* border颜色 */
+  --base-border-color: #ebeef5;
+  /* 头部导航条背景色 */
+  --header-wrap-bg: #3c4146;
+  /* 头部导航文字颜色 */
+  --nav-item-fontcolor: #ffffff;
+  /* 头部导航hover背景色 */
+  --nav-item-hoverbg: #485158;
+  /* 头部导航hover文字颜色 */
+  --nav-item-hovercolor: #ffffff;
+  /* 头部导航选中背景色 */
+  --nav-item-activebg: #485158;
+  /* 头部导航选中文字颜色 */
+  --nav-item-activecolor: #ffffff;
+  /* 头部导航选中下边框border颜色 */
+  --nav-item-activeborder: #1890ff;
+}
+
+/* ---------------------示例用法------------------------ */
+
+/* 使用变量 */
+.__postcss-div {
+  color: var(--base-color);
+}
+
+/* 使用嵌套 */
+.__postcss-div {
+  display: flex;
+  transform: rotate(30deg);
+  & .postcss-child-div {
+    display: block;
+    transform: rotate(-50deg);
+  }
+}
+
+/* 使用color-mod color函数调整色值 可混合使用多个 参数如下*/
+/*
+alpha()：可以简写为a()，接受一个0%至100%的值，用来调整透明度值
+saturation()：可以简写为s()，接受一个0%至100%的值，用来调整饱和度值
+hue()：可以简写为h()，接到一个0到360的整数值，用来调整色相值
+lightness()：可以简写为l()，接受一个0%到100%的值，用来调整亮度值
+tint()：接受一个0%到100%的值，用来调整色彩值
+shade()：接受一个0%到100%的值，用来调整暗度值
+whiteness()：可以简写为w()，接受一个0%到100%的值，用来调整白色值
+blackness()： 可以简写为b()，接受一个0%到100%的值，用来调整黑色值
+contrast()：接受一个0到100%的值，调整对比度
+*/
+.__postcss-div {
+  color: color(#00b300 lightness(+30%));
+}

@@ -67,7 +67,6 @@ exports.getList = async (ctx, next) => {
       }
     ]
   });
-
   ctx.response.body = {
     status: 0,
     message: '成功',
