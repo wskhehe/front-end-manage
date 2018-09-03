@@ -101,3 +101,8 @@ use: [
   // }
 ],
 ```
+
+### vscode 配置
+
+"emmet.includeLanguages": 添加"javascript": "javascriptreact"
+"javascript.implicitProjectConfig.experimentalDecorators"修改为 true
