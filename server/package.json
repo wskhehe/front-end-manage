@@ -9,6 +9,7 @@
     "apidoc": "apidoc -i controllers/ -o public/apidoc/"
   },
   "dependencies": {
+    "async-validator": "^1.8.5",
     "axios": "^0.18.0",
     "jsonwebtoken": "^8.3.0",
     "koa": "^2.5.1",
@@ -21,7 +22,9 @@
     "koa2-cors": "^2.0.6",
     "log4js": "^3.0.2",
     "mockjs": "^1.0.1-beta3",
-    "mysql": "^2.15.0"
+    "mysql": "^2.15.0",
+    "uuid": "^3.3.2",
+    "validator": "^10.7.1"
   },
   "devDependencies": {},
   "license": "ISC",
