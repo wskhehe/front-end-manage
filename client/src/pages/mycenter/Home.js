@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
-import Layout from '@/layout/layout';
+import { connect } from 'react-redux';
+import { setMenuAction } from '@/store/global/action';
 
+@connect(
+  state => state,
+  { setMenuAction }
+)
 class MyCenter extends Component {
+  componentDidMount() {
+    this.props.setMenuAction('mycenter');
+  }
   render() {
-    return <Layout menuActive="5">个人中心</Layout>;
+    return <div>个人中心</div>;
   }
 }
 export default MyCenter;

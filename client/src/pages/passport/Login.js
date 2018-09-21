@@ -50,12 +50,7 @@ class Login extends Component {
               validateFirst: true,
               validateTrigger: 'onBlur',
               initialValue: this.state.remember ? this.state.account : '',
-              rules: [
-                { required: true, message: '请输入用户名!' },
-                {
-                  validator: this.handleCheckAccout
-                }
-              ]
+              rules: [{ required: true, message: '请输入用户名!' }, { validator: this.handleCheckAccout }]
             })(
               <Input
                 prefix={<Icon type="user" style={{ color: 'rgba(0,0,0,.25)' }} />}

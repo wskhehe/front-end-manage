@@ -1,12 +1,18 @@
-import * as home from './action-type';
-// import axios from 'axios';
+import * as types from './action-type';
 import axios from '@/utils/axios';
 import api from '@/api/base.api';
 
 // 设置全局loading
 export const setLoading = value => {
   return {
-    type: home.SETLOADING,
+    type: types.SETLOADING,
+    value
+  };
+};
+// 设置侧栏选中
+export const setMenuAction = value => {
+  return {
+    type: types.SETMENUACTION,
     value
   };
 };
@@ -18,7 +24,7 @@ export const saveProduction = () => {
       let result = await axios.get(api.mock);
       if (result && result.status === 0) {
         dispatch({
-          type: home.GETPRODUCTION,
+          type: types.GETPRODUCTION,
           data: result.data.list
         });
       }

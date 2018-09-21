@@ -1,17 +1,17 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Icon, Button } from 'antd';
+import { Layout, Menu, Icon } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './layout.css';
 
 const { Header, Sider, Content } = Layout;
 @connect(state => state)
-class SiderDemo extends Component {
+class SiderMenu extends Component {
   state = {
     collapsed: false
   };
   componentWillMount() {
-    // console.log(this.props);
+    // console.log(this.props.globalData);
   }
   onCollapse = collapsed => {
     this.setState({ collapsed });
@@ -42,32 +42,32 @@ class SiderDemo extends Component {
         </Header>
         <Layout>
           <Sider className="fem-layout-sider" collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
-            <Menu mode="inline" defaultSelectedKeys={[this.props.menuActive]}>
-              <Menu.Item key="1">
+            <Menu mode="inline" selectedKeys={[this.props.globalData.menuActive]}>
+              <Menu.Item key="dashboard">
                 <Link to="/dashboard">
                   <Icon type="area-chart" />
                   <span>Dashboard</span>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="2">
+              <Menu.Item key="task">
                 <Link to="/task">
                   <Icon type="video-camera" />
                   <span>任务管理</span>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="3">
+              <Menu.Item key="role">
                 <Link to="/role">
                   <Icon type="team" />
                   <span>人员管理</span>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="4">
+              <Menu.Item key="setting">
                 <Link to="/setting">
                   <Icon type="setting" />
                   <span>系统设置</span>
                 </Link>
               </Menu.Item>
-              <Menu.Item key="5">
+              <Menu.Item key="mycenter">
                 <Link to="/mycenter">
                   <Icon type="user" />
                   <span>个人中心</span>
@@ -85,4 +85,4 @@ class SiderDemo extends Component {
   }
 }
 
-export default SiderDemo;
+export default SiderMenu;

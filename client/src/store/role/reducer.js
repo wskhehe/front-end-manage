@@ -1,4 +1,4 @@
-import * as home from './action-type';
+import * as types from './action-type';
 
 let defaultState = {
   orderSum: '', //金额
@@ -9,13 +9,13 @@ let defaultState = {
 // 首页表单数据
 export const formData = (state = defaultState, action = {}) => {
   switch (action.type) {
-    case home.SAVEFORMDATA:
+    case types.SAVEFORMDATA:
       return { ...state, ...{ [action.datatype]: action.value } };
-    case home.SAVEFORMDATAALL:
+    case types.SAVEFORMDATAALL:
       return { ...state, ...action.value };
-    case home.SAVEIMG:
+    case types.SAVEIMG:
       return { ...state, ...{ imgpath: action.path } };
-    case home.CLEARDATA:
+    case types.CLEARDATA:
       return { ...state, ...defaultState };
     default:
       return state;
