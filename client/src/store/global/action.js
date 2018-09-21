@@ -19,7 +19,7 @@ export const saveProduction = () => {
       if (result && result.status === 0) {
         dispatch({
           type: home.GETPRODUCTION,
-          dataList: result.data.list
+          data: result.data.list
         });
       }
     } catch (err) {

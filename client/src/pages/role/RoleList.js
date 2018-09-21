@@ -45,10 +45,6 @@ class RoleList extends Component {
     return (
       <div>
         <h1>我是role</h1>
-        <div>
-          <span className="role-color">我是redux中的数据:</span>
-          {JSON.stringify(this.props)}
-        </div>
         <div className="mt-10">
           <Button type="primary" onClick={this.handleClick.bind(this, 'canshu1')}>
             单项修改
@@ -62,6 +58,10 @@ class RoleList extends Component {
           <Button className="ml-10" type="primary" onClick={this.handleClick4}>
             异步redux
           </Button>
+        </div>
+        <div>
+          <span className="role-color">我是redux中的数据:</span>
+          {JSON.stringify(this.props)}
         </div>
       </div>
     );

@@ -142,7 +142,6 @@ exports.addTask = async (ctx, next) => {
  *
  */
 exports.getTaskList = async (ctx, next) => {
-  console.log(1);
   let result = await conn.query(Sql.getTaskList);
   if (result.error) {
     ctx.response.body = {

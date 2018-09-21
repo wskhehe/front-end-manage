@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Icon } from 'antd';
+import { Layout, Menu, Icon, Button } from 'antd';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import './layout.css';
 
 const { Header, Sider, Content } = Layout;
-@connect((state) => state)
+@connect(state => state)
 class SiderDemo extends Component {
   state = {
     collapsed: false
@@ -13,8 +13,13 @@ class SiderDemo extends Component {
   componentWillMount() {
     // console.log(this.props);
   }
-  onCollapse = (collapsed) => {
+  onCollapse = collapsed => {
     this.setState({ collapsed });
+  };
+  handleLogout = () => {
+    localStorage.removeItem('Authorization');
+    localStorage.removeItem('trade_currentData');
+    window.location.hash = '#/passport/login';
   };
   render() {
     return (
@@ -27,7 +32,8 @@ class SiderDemo extends Component {
           <div className="fem-header-right">
             <div>some item</div>
             <div className="header-notice">
-              <Icon type="bell" />
+              <Icon type="bell" title="message" />
+              <Icon type="logout" title="退出" onClick={this.handleLogout} />
             </div>
             <div className="avatar">
               <img src={require('../assets/img/cat.png')} alt="" />

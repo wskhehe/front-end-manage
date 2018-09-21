@@ -1,5 +1,5 @@
 import axios from 'axios';
-// import $config from '@/config/config';
+import envconfig from '@/config/config';
 import { Message } from 'antd';
 import Store from '@/store/store';
 const { dispatch } = Store;
@@ -7,14 +7,16 @@ const { dispatch } = Store;
 axios.defaults.timeout = 60000;
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.headers.put['Content-Type'] = 'application/json';
-axios.defaults.headers.common['Authorization'] = localStorage.getItem('Authorization') || '';
+axios.defaults.baseURL = envconfig.baseURL;
+// axios.defaults.headers.common['Authorization'] = localStorage.getItem('Authorization') || '';
 
 //请求发出拦截器
 var loading;
 //loading计数器
 let loadingCount = 0;
 axios.interceptors.request.use(
-  (config) => {
+  config => {
+    config.headers.Authorization = localStorage.getItem('Authorization') || '';
     //静默加载 不添加loading
     if (!config.silence) loadingCount++;
     if (loadingCount > 0) {
@@ -26,7 +28,7 @@ axios.interceptors.request.use(
     }
     return config;
   },
-  (error) => {
+  error => {
     Message.error('请求参数配置错误');
     return Promise.reject(error);
   }
@@ -34,7 +36,7 @@ axios.interceptors.request.use(
 
 //请求响应拦截器
 axios.interceptors.response.use(
-  (res) => {
+  res => {
     // 关闭loaading
     if (!res.config.silence) loadingCount--;
     if (!loadingCount) {
@@ -54,9 +56,10 @@ axios.interceptors.response.use(
       // 否则这会拦截所有status != 0的响应 并抛出Message
       if (res.data.status != 0) {
         if (res.data.status == 401) {
-          localStorage.removeItem('Authorization');
-          localStorage.removeItem('trade_currentData');
-          window.location.href = './passport.html#/login';
+          Message.error('登录信息失效');
+          // localStorage.removeItem('Authorization');
+          // localStorage.removeItem('trade_currentData');
+          // window.location.hash = '#/passport/login';
           return Promise.reject(res.data.message);
         } else {
           if (res.config.backself) {
@@ -74,7 +77,7 @@ axios.interceptors.response.use(
       return Promise.reject('服务器未响应数据');
     }
   },
-  (error) => {
+  error => {
     // 关闭loaading
     if (loadingCount != 0) loadingCount--;
     if (loading && loadingCount == 0) {
@@ -92,7 +95,7 @@ axios.interceptors.response.use(
         case 401:
           localStorage.removeItem('Authorization');
           localStorage.removeItem('trade_currentData');
-          window.location.href = './passport.html#/login';
+          window.location.hash = '#/passport/login';
           break;
         case 403:
           message = '请求资源无权访问';

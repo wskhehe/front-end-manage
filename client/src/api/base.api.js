@@ -1,14 +1,13 @@
 // 公用部分api
 
-import config from '@/config/config';
 let api = {};
-
-const baseURL = config.baseURL;
-api.baseURL = baseURL;
 
 /*----------公共接口----------*/
 
 //mock测试
-api.mock = baseURL + '/mock/getlist';
+api.mock = '/mock/getlist';
+
+//登录
+api.login = '/passport/login';
 
 export default api;

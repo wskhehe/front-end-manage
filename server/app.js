@@ -85,21 +85,21 @@ app.use(errorHandler);
 app.use(staticServer(path.join(__dirname, '/public')));
 
 // // jwt中间件
-// app.use(
-//   jwtKoa({ secret: config.secret }).unless({
-//     // useOriginalUrl: false,
-//     path: [
-//       `${config.serverBaseUrl}/passport/login`,
-//       `${config.serverBaseUrl}/passport/register`,
-//       `${config.serverBaseUrl}/upload`,
-//       `${config.serverBaseUrl}/download`,
-//       `${config.serverBaseUrl}/mock`,
-//       /^\/views/,
-//       /^\/public/,
-//       /^\/apidoc/
-//     ] //数组中的路径不需要通过jwt验证
-//   })
-// );
+app.use(
+  jwtKoa({ secret: config.secret }).unless({
+    // useOriginalUrl: false,
+    path: [
+      `${config.serverBaseUrl}/passport/login`,
+      `${config.serverBaseUrl}/passport/register`,
+      `${config.serverBaseUrl}/upload`,
+      `${config.serverBaseUrl}/download`,
+      `${config.serverBaseUrl}/mock`,
+      /^\/views/,
+      /^\/public/,
+      /^\/apidoc/
+    ] //数组中的路径不需要通过jwt验证
+  })
+);
 // 使用koaBody中间件 并设置可接受文件文件上传
 app.use(
   koaBody({

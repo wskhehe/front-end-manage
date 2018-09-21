@@ -1,0 +1,22 @@
+.login-content {
+  width: 400px;
+  margin: 50px auto;
+  text-align: center;
+  & .login-form {
+    text-align: left;
+  }
+  & .app-logo {
+    width: 80px;
+    height: 80px;
+  }
+  & input + input {
+    margin-top: 16px;
+  }
+
+  & .login-form-forgot {
+    float: right;
+  }
+  & .login-form-button {
+    width: 100%;
+  }
+}
