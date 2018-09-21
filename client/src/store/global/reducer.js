@@ -10,7 +10,7 @@ export const globalData = (state = defaultState, action = {}) => {
     case home.SETLOADING:
       return { ...state, ...{ globalLoading: action.value } };
     case home.GETPRODUCTION:
-      return { ...state, ...{ proData: action } };
+      return { ...state, ...{ proData: action.dataList } };
     default:
       return state;
   }

@@ -6,7 +6,7 @@ import { Button } from 'antd';
 import './RoleList.css';
 
 @connect(
-  (state) => state,
+  state => state,
   {
     saveFormData,
     saveFormDataAll,
