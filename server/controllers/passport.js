@@ -76,7 +76,7 @@ exports.login = async (ctx, next) => {
     } else {
       ctx.response.body = {
         status: 1,
-        message: '该用户不存在'
+        message: '用户名或密码错误'
       };
     }
   }

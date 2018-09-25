@@ -80,7 +80,7 @@ axios.interceptors.response.use(
   error => {
     // 关闭loaading
     if (loadingCount != 0) loadingCount--;
-    if (loading && loadingCount == 0) {
+    if (loadingCount == 0) {
       dispatch({
         type: 'SETLOADING',
         value: false

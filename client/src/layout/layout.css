@@ -36,8 +36,11 @@
 }
 .fem-layout-sider {
   background: #ffffff;
-  .ant-layout-sider-trigger {
+  & .ant-layout-sider-trigger {
     background: var(--header-wrap-bg);
+  }
+  & .ant-menu-root {
+    height: 100%;
   }
 }
 .fem-layout-content {

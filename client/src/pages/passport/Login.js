@@ -22,7 +22,12 @@ class Login extends Component {
     }
     callback();
   };
-
+  handleCheckPWD = (rule, value, callback) => {
+    if (!Validator.checkstr(value, 6, 32)) {
+      callback('6-32位数字、字母字符串');
+    }
+    callback();
+  };
   handleSubmit = e => {
     e.preventDefault();
     this.props.form.validateFields(async (err, values) => {
@@ -61,7 +66,10 @@ class Login extends Component {
           </FormItem>
           <FormItem>
             {getFieldDecorator('password', {
-              rules: [{ required: true, message: '请输入用户密码!' }]
+              validateFirst: true,
+              validateTrigger: 'onBlur',
+              initialValue: this.state.remember ? this.state.password : '',
+              rules: [{ required: true, message: '请输入用户密码!' }, { validator: this.handleCheckPWD }]
             })(
               <Input
                 prefix={<Icon type="lock" style={{ color: 'rgba(0,0,0,.25)' }} />}
