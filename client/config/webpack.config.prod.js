@@ -68,7 +68,8 @@ module.exports = {
     // We inferred the "public path" (such as / or /my-project) from homepage.
     publicPath: publicPath,
     // Point sourcemap entries to original disk location (format as URL on Windows)
-    devtoolModuleFilenameTemplate: (info) => path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
+    devtoolModuleFilenameTemplate: info =>
+      path.relative(paths.appSrc, info.absoluteResourcePath).replace(/\\/g, '/')
   },
   resolve: {
     // This allows you to set a fallback for where Webpack should look for modules.
@@ -87,6 +88,7 @@ module.exports = {
     // for React Native Web.
     extensions: ['.web.js', '.mjs', '.js', '.json', '.web.jsx', '.jsx'],
     alias: {
+      '@': path.join(__dirname, '../src'),
       // Support React Native Web
       // https://www.smashingmagazine.com/2016/08/a-glimpse-into-the-future-with-react-native-for-web/
       'react-native': 'react-native-web'
@@ -202,7 +204,10 @@ module.exports = {
                     {
                       loader: require.resolve('less-loader'), // compiles Less to CSS
                       options: {
-                        modifyVars: require(path.join(__dirname, '../theme.js')),
+                        modifyVars: require(path.join(
+                          __dirname,
+                          '../theme.js'
+                        )),
                         javascriptEnabled: true
                       }
                     }
@@ -223,7 +228,16 @@ module.exports = {
             // it's runtime that would otherwise processed through "file" loader.
             // Also exclude `html` and `json` extensions so they get processed
             // by webpacks internal loaders.
-            exclude: [/\.html$/, /\.(js|jsx)$/, /\.(css|less)$/, /\.json$/, /\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/],
+            exclude: [
+              /\.html$/,
+              /\.(js|jsx)$/,
+              /\.(css|less)$/,
+              /\.json$/,
+              /\.bmp$/,
+              /\.gif$/,
+              /\.jpe?g$/,
+              /\.png$/
+            ],
             options: {
               name: 'static/media/[name].[hash:8].[ext]'
             }
