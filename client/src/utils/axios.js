@@ -57,9 +57,9 @@ axios.interceptors.response.use(
       if (res.data.status != 0) {
         if (res.data.status == 401) {
           Message.error('登录信息失效');
-          // localStorage.removeItem('Authorization');
-          // localStorage.removeItem('trade_currentData');
-          // window.location.hash = '#/passport/login';
+          localStorage.removeItem('Authorization');
+          localStorage.removeItem('trade_currentData');
+          window.location.hash = '#/passport/login';
           return Promise.reject(res.data.message);
         } else {
           if (res.config.backself) {

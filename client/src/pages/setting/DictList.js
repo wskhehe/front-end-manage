@@ -28,6 +28,7 @@ class DictList extends Component {
         </Link>
         <Table dataSource={this.state.dataSource} rowKey={record => record.id}>
           <Column title="标签名" dataIndex="label" key="label" />
+          <Column title="标签值" dataIndex="value" key="value" />
           <Column title="类型" dataIndex="type" key="type" />
           <Column title="描述" dataIndex="desc" key="desc" />
           <Column title="备注" dataIndex="remarks" key="remarks" />
