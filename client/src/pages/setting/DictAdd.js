@@ -3,7 +3,19 @@ import Validator from '@/utils/validator';
 import axios from '@/utils/axios';
 import api from '@/api/setting.api';
 
-import { Form, Input, Tooltip, Icon, Cascader, Select, Row, Col, Checkbox, Button, AutoComplete } from 'antd';
+import {
+  Form,
+  Input,
+  Tooltip,
+  Icon,
+  Cascader,
+  Select,
+  Row,
+  Col,
+  Checkbox,
+  Button,
+  AutoComplete
+} from 'antd';
 
 import './DictAdd.css';
 const FormItem = Form.Item;
@@ -87,7 +99,9 @@ class DictAdd extends Component {
     if (!value) {
       autoCompleteResult = [];
     } else {
-      autoCompleteResult = ['.com', '.org', '.net'].map(domain => `${value}${domain}`);
+      autoCompleteResult = ['.com', '.org', '.net'].map(
+        domain => `${value}${domain}`
+      );
     }
     this.setState({ autoCompleteResult });
   };
@@ -198,34 +212,63 @@ class DictAdd extends Component {
             }
           >
             {getFieldDecorator('nickname', {
-              rules: [{ required: true, message: 'Please input your nickname!', whitespace: true }]
+              rules: [
+                {
+                  required: true,
+                  message: 'Please input your nickname!',
+                  whitespace: true
+                }
+              ]
             })(<Input />)}
           </FormItem>
           <FormItem {...formItemLayout} label="Habitual Residence">
             {getFieldDecorator('residence', {
               initialValue: ['zhejiang', 'hangzhou', 'xihu'],
-              rules: [{ type: 'array', required: true, message: 'Please select your habitual residence!' }]
+              rules: [
+                {
+                  type: 'array',
+                  required: true,
+                  message: 'Please select your habitual residence!'
+                }
+              ]
             })(<Cascader options={residences} />)}
           </FormItem>
           <FormItem {...formItemLayout} label="Phone Number">
             {getFieldDecorator('phone', {
-              rules: [{ required: true, message: 'Please input your phone number!' }]
-            })(<Input addonBefore={prefixSelector} style={{ width: '100%' }} />)}
+              rules: [
+                { required: true, message: 'Please input your phone number!' }
+              ]
+            })(
+              <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+            )}
           </FormItem>
           <FormItem {...formItemLayout} label="Website">
             {getFieldDecorator('website', {
               rules: [{ required: true, message: 'Please input website!' }]
             })(
-              <AutoComplete dataSource={websiteOptions} onChange={this.handleWebsiteChange} placeholder="website">
+              <AutoComplete
+                dataSource={websiteOptions}
+                onChange={this.handleWebsiteChange}
+                placeholder="website"
+              >
                 <Input />
               </AutoComplete>
             )}
           </FormItem>
-          <FormItem {...formItemLayout} label="Captcha" extra="We must make sure that your are a human.">
+          <FormItem
+            {...formItemLayout}
+            label="Captcha"
+            extra="We must make sure that your are a human."
+          >
             <Row gutter={8}>
               <Col span={12}>
                 {getFieldDecorator('captcha', {
-                  rules: [{ required: true, message: 'Please input the captcha you got!' }]
+                  rules: [
+                    {
+                      required: true,
+                      message: 'Please input the captcha you got!'
+                    }
+                  ]
                 })(<Input />)}
               </Col>
               <Col span={12}>
