@@ -91,6 +91,7 @@ app.use(
     path: [
       `${config.serverBaseUrl}/passport/login`,
       `${config.serverBaseUrl}/passport/register`,
+      `${config.serverBaseUrl}/employee/addEmployee`,
       `${config.serverBaseUrl}/upload`,
       `${config.serverBaseUrl}/download`,
       `${config.serverBaseUrl}/mock`,
