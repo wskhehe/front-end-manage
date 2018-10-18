@@ -1,68 +1,66 @@
-/*==============================================================*/
-/* DBMS name:      MySQL 5.0                                    */
-/* Created on:     2018/8/10 16:46:47                           */
-/*==============================================================*/
+/*
+Navicat MySQL Data Transfer
 
+Source Server         : localhost
+Source Server Version : 50717
+Source Host           : localhost:3306
+Source Database       : fem
 
-drop table if exists fem_dict;
+Target Server Type    : MYSQL
+Target Server Version : 50717
+File Encoding         : 65001
 
-drop table if exists fem_employee;
+Date: 2018-10-18 17:49:26
+*/
 
-drop table if exists fem_task;
+SET FOREIGN_KEY_CHECKS=0;
 
-/*==============================================================*/
-/* Table: fem_dict                                              */
-/*==============================================================*/
-create table fem_dict
-(
-   id                   varchar(32) not null comment '主键',
-   value                varchar(100) comment '数据值',
-   label              varchar(100) comment '标签名',
-   type                 varchar(2) comment '类型',
-   `desc`                varchar(255) comment '描述',
-   `sort`                 decimal(10,0) comment '排序',
-   parent_id            varchar(32) comment '父级编号',
-   remarks              varchar(255) comment '备注',
-   primary key (id)
-);
+-- ----------------------------
+-- Table structure for fem_dict
+-- ----------------------------
+DROP TABLE IF EXISTS `fem_dict`;
+CREATE TABLE `fem_dict` (
+  `id` varchar(32) NOT NULL COMMENT '主键',
+  `value` varchar(100) DEFAULT NULL COMMENT '数据值',
+  `label` varchar(100) DEFAULT NULL COMMENT '标签名',
+  `type` varchar(2) DEFAULT NULL COMMENT '类型',
+  `desc` varchar(255) DEFAULT NULL COMMENT '描述',
+  `sort` decimal(10,0) DEFAULT NULL COMMENT '排序',
+  `parent_id` varchar(32) DEFAULT NULL COMMENT '父级编号',
+  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='字典管理';
 
-alter table fem_dict comment '字典管理';
+-- ----------------------------
+-- Table structure for fem_employee
+-- ----------------------------
+DROP TABLE IF EXISTS `fem_employee`;
+CREATE TABLE `fem_employee` (
+  `id` varchar(32) NOT NULL COMMENT '主键',
+  `name` varchar(30) DEFAULT NULL COMMENT '姓名',
+  `account` varchar(20) DEFAULT NULL COMMENT '账号',
+  `password` varchar(32) DEFAULT NULL COMMENT '密码',
+  `icon` varchar(255) DEFAULT NULL COMMENT '头像',
+  `group` varchar(32) DEFAULT NULL COMMENT '小组：字典维护',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='人员信息';
 
-/*==============================================================*/
-/* Table: fem_employee                                          */
-/*==============================================================*/
-create table fem_employee
-(
-   id                   varchar(32) not null comment '主键',
-   name                 varchar(30) comment '姓名',
-   account              varchar(20) comment '账号',
-   password             varchar(32) comment '密码',
-   icon                 varchar(255) comment '头像',
-   `group`                varchar(32) comment '小组：字典维护',
-   primary key (id)
-);
-
-alter table fem_employee comment '人员信息';
-
-/*==============================================================*/
-/* Table: fem_task                                              */
-/*==============================================================*/
-create table fem_task
-(
-   id                   varchar(32) not null comment '主键',
-   project              varchar(32) comment '项目',
-   module               varchar(100) comment '模块',
-   developer            varchar(32) comment '开发者',
-   level                varchar(1) comment '优先级',
-   task_desc            varchar(255) comment '任务描述',
-   create_time          datetime comment '创建时间',
-   plan_start_time      datetime comment '计划开始时间',
-   plan_end_time        datetime comment '计划完成时间',
-   real_end_time        datetime comment '实际完成时间',
-   remarks              varchar(255) comment '备注',
-   state                varchar(1) comment '状态',
-   primary key (id)
-);
-
-alter table fem_task comment '任务信息';
-
+-- ----------------------------
+-- Table structure for fem_task
+-- ----------------------------
+DROP TABLE IF EXISTS `fem_task`;
+CREATE TABLE `fem_task` (
+  `id` varchar(32) NOT NULL COMMENT '主键',
+  `project` varchar(32) DEFAULT NULL COMMENT '项目',
+  `module` varchar(100) DEFAULT NULL COMMENT '模块',
+  `developer` varchar(32) DEFAULT NULL COMMENT '开发者',
+  `level` varchar(32) DEFAULT NULL COMMENT '优先级',
+  `task_desc` varchar(255) DEFAULT NULL COMMENT '任务描述',
+  `create_time` datetime DEFAULT NULL COMMENT '创建时间',
+  `plan_start_time` datetime DEFAULT NULL COMMENT '计划开始时间',
+  `plan_end_time` datetime DEFAULT NULL COMMENT '计划完成时间',
+  `real_end_time` datetime DEFAULT NULL COMMENT '实际完成时间',
+  `remarks` varchar(255) DEFAULT NULL COMMENT '备注',
+  `state` varchar(1) DEFAULT NULL COMMENT '状态',
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='任务信息';
