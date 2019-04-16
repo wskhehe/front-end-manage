@@ -68,7 +68,7 @@ exports.getList = async (ctx, next) => {
     ]
   });
   ctx.response.body = {
-    code: 0,
+    status: 0,
     message: '成功',
     query: ctx.query,
     data: data
